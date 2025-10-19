@@ -19,6 +19,14 @@ class ApplicationTest extends NsTest {
     }
 
     @Test
+    void 예외_테스트() {
+        assertSimpleTest(() ->
+                assertThatThrownBy(() -> runException("-1,2,3"))
+                        .isInstanceOf(IllegalArgumentException.class)
+        );
+    }
+
+    @Test
     void 빈문자열_입력() {
         assertSimpleTest(() -> {
             run("\n");
@@ -68,7 +76,7 @@ class ApplicationTest extends NsTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"0,2,3", "//;\\n0;2,3", "-1,2,3", "//;\\n-1;2,3", "0.1,0.2,0.3", "//;\\n0.1;0.2,0.3"})
+    @ValueSource(strings = {"0,2,3", "//;\\n0;2,3", "//;\\n-1;2,3", "0.1,0.2,0.3", "//;\\n0.1;0.2,0.3"})
     void 예외_0_음수_소수_입력(String input) {
         assertSimpleTest(() ->
                 assertThatThrownBy(() -> runException(input))
@@ -106,10 +114,11 @@ class ApplicationTest extends NsTest {
         );
     }
 
-    @Test
-    void 예외_커스텀_구분자가_두글자_이상() {
+    @ParameterizedTest
+    @ValueSource(strings = {"//;!\\n1;!2;!3;!4", "//  \\n1  2  3  4"})
+    void 예외_커스텀_구분자가_두글자_이상(String input) {
         assertSimpleTest(() ->
-                assertThatThrownBy(() -> runException("//;!\\n1;!2;!3;!4"))
+                assertThatThrownBy(() -> runException(input))
                         .isInstanceOf(IllegalArgumentException.class)
                         .hasMessageContaining("커스텀 구분자는 한 글자여야 합니다.")
         );
