@@ -5,6 +5,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Application {
+    private static final String DEFAULT_DELIMITER = ",|:";
+    private static final String CUSTOM_DELIMITER_PATTERN = "^//(.*?)(?:\n)(.*)$";
+
     public static void main(String[] args) {
         System.out.println("덧셈할 문자열을 입력해 주세요.");
         String inputExpression = Console.readLine();
@@ -21,11 +24,10 @@ public class Application {
     private static String[] splitByDelimiter(String inputExpression) {
         inputExpression = inputExpression.replace("\\n", "\n");
 
-        String defaultDelimiter = ",|:";
-        String delimiter = defaultDelimiter;
+        String delimiter = DEFAULT_DELIMITER;
         String numbers = inputExpression;
 
-        Pattern pattern = Pattern.compile("^//(.*?)(?:\n)(.*)$");
+        Pattern pattern = Pattern.compile(CUSTOM_DELIMITER_PATTERN);
         Matcher matcher = pattern.matcher(inputExpression);
 
         if (matcher.find()) {
@@ -43,7 +45,7 @@ public class Application {
             delimiter = defaultDelimiter + "|" + Pattern.quote(customDelimiter);
 
             if (customDelimiter.equals(" ")) {
-                delimiter = defaultDelimiter + "|\\s+";
+                delimiter = defaultDelimiter + "|\\s";
             }
         }
 
